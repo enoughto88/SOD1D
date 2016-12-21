@@ -23,9 +23,32 @@ file = 20;
 %Grid parameter
 nx   = 100;
 XL   = 1.2;
-time = 2.0e-3*100;
+ANALYTIC = 1; %0:No,1:Yes
+time = 2.0e-3*100; %If ANALYTIC = 1, time must be set
+%Horizontal axis setting
+xrange(1)   =-0.6; xrange(2)   = 0.6;
+xTickInterval = 0.2;
+%Vertical axis setting
+rhorange(1) = 0.0; rhorange(2) = 1.1; 
+urange(1)   = 0.0; urange(2)   = 1.1;
+Prange(1)   = 0.0; Prange(2)   = 1.1;
+Trange(1)   = 0.6; Trange(2)   = 1.4;
+rhoTickInterval = 0.2;
+uTickInterval   = 0.2;
+PTickInterval   = 0.2;
+TTickInterval   = 0.2;
 %----------------------------------
 
+xTick    = xrange(1):xTickInterval:xrange(2);
+rhoTick  = rhorange(1):rhoTickInterval:rhorange(2);
+uTick    = urange(1):uTickInterval:urange(2);
+PTick    = Prange(1):PTickInterval:Prange(2);
+TTick    = Trange(1):TTickInterval:Trange(2);
+IntxTick = num2str(xTick','%2.1f\n');
+IntrhoTick = num2str(rhoTick','%2.1f\n');
+IntuTick = num2str(uTick','%2.1f\n');
+IntPTick = num2str(PTick','%2.1f\n');
+IntTTick = num2str(TTick','%2.1f\n');
 
 dx = XL/nx;
 xx = -XL/2+dx/2:dx:XL/2-dx/2;
@@ -60,65 +83,77 @@ data = sod_analytic(time,XL);
 
 %2D contour map of space potential
 plot(xx,rho,'ko','MarkerSize',5);
-hold on
-plot(data.x,data.rho,'-k','LineWidth',2);
 grid off
 hold on
-set(gca, 'XLim', [-XL/2,XL/2]);
-set(gca, 'YLim', [0,1.1]);
-set(gca,'XTick',[-0.6 -0.4 -0.2  0 0.2 0.4 0.6])
-set(gca,'XTickLabel',{'-0.6','-0.4','-0.2','0.0','0.2','0.4','0.6'})
-set(gca,'YTick',[0 0.2 0.4 0.6 0.8 1.0 1.2])
-set(gca,'YTickLabel',{'0.0','0.2','0.4','0.6','0.8','1.0','1.2'})
+set(gca, 'XLim', xrange);
+set(gca, 'YLim', rhorange);
+set(gca,'XTick',xTick)
+set(gca,'XTickLabel',IntxTick)
+set(gca,'YTick',rhoTick)
+set(gca,'YTickLabel',IntrhoTick)
 xlabel('x-Position','FontSize',16)
 ylabel('Density','FontSize',16)
+if(ANALYTIC == 1)
+   hold on
+   plot(data.x,data.rho,'-k','LineWidth',2);
+   legend('Numerical','Analytical')
+end
 saveas(figure(1),strcat(dirout,'rho.png'));
 hold off
 
 plot(xx,vel,'ko','MarkerSize',5);
-hold on
-plot(data.x,data.u,'-k','LineWidth',2);
 grid off
 hold on
-set(gca, 'XLim', [-XL/2,XL/2]);
-set(gca, 'YLim', [0,1.1]);
-set(gca,'XTick',[-0.6 -0.4 -0.2  0 0.2 0.4 0.6])
-set(gca,'XTickLabel',{'-0.6','-0.4','-0.2','0.0','0.2','0.4','0.6'})
-set(gca,'YTick',[0 0.2 0.4 0.6 0.8 1.0 1.2])
-set(gca,'YTickLabel',{'0.0','0.2','0.4','0.6','0.8','1.0','1.2'})
+set(gca, 'XLim', xrange);
+set(gca, 'YLim', urange);
+set(gca,'XTick',xTick)
+set(gca,'XTickLabel',IntxTick)
+set(gca,'YTick',uTick)
+set(gca,'YTickLabel',IntuTick)
 xlabel('x-Position','FontSize',16)
 ylabel('Velocity','FontSize',16)
+if(ANALYTIC == 1)
+   hold on
+   plot(data.x,data.u,'-k','LineWidth',2);
+   legend('Numerical','Analytical')
+end
 saveas(figure(1),strcat(dirout,'vel.png'));
 hold off
 
 plot(xx,pre,'ko','MarkerSize',5);
-hold on
-plot(data.x,data.P,'k-','LineWidth',2);
 grid off
 hold on
-set(gca, 'XLim', [-XL/2,XL/2]);
-set(gca, 'YLim', [0,1.1]);
-set(gca,'XTick',[-0.6 -0.4 -0.2  0 0.2 0.4 0.6])
-set(gca,'XTickLabel',{'-0.6','-0.4','-0.2','0.0','0.2','0.4','0.6'})
-set(gca,'YTick',[0 0.2 0.4 0.6 0.8 1.0 1.2])
-set(gca,'YTickLabel',{'0.0','0.2','0.4','0.6','0.8','1.0','1.2'})
+set(gca, 'XLim', xrange);
+set(gca, 'YLim', Prange);
+set(gca,'XTick',xTick)
+set(gca,'XTickLabel',IntxTick)
+set(gca,'YTick',PTick)
+set(gca,'YTickLabel',IntPTick)
 xlabel('x-Position','FontSize',16)
 ylabel('Pressure','FontSize',16)
+if(ANALYTIC == 1)
+   hold on
+   plot(data.x,data.P,'k-','LineWidth',2);
+   legend('Numerical','Analytical')
+end
 saveas(figure(1),strcat(dirout,'pre.png'));
 hold off
 
 plot(xx,tem,'ko','MarkerSize',5);
-hold on
-plot(data.x,data.T,'-k','LineWidth',2);
 grid off
 hold on
-set(gca, 'XLim', [-XL/2,XL/2]);
-set(gca, 'YLim', [0.6,1.2]);
-set(gca,'XTick',[-0.6 -0.4 -0.2  0 0.2 0.4 0.6])
-set(gca,'XTickLabel',{'-0.6','-0.4','-0.2','0.0','0.2','0.4','0.6'})
-set(gca,'YTick',[0 0.2 0.4 0.6 0.8 1.0 1.2])
-set(gca,'YTickLabel',{'0.0','0.2','0.4','0.6','0.8','1.0','1.2'})
+set(gca, 'XLim', xrange);
+set(gca, 'YLim', Trange);
+set(gca,'XTick',xTick)
+set(gca,'XTickLabel',IntxTick)
+set(gca,'YTick',TTick)
+set(gca,'YTickLabel',IntTTick)
 xlabel('x-Position','FontSize',16)
 ylabel('Temperature','FontSize',16)
+if(ANALYTIC == 1)
+   hold on
+   plot(data.x,data.T,'-k','LineWidth',2);
+   legend('Numerical','Analytical')
+end
 saveas(figure(1),strcat(dirout,'tem.png'));
 hold off

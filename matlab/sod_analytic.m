@@ -1,20 +1,19 @@
 function [data] = sod_analytic(time,XL)
 %time  = 0.2;
-%Initial conditions
+%---------- Initial conditions ------------------
 gam  = 1.4;
 rho4 = 1;
 u4   = 0;
 P4   = 1;
-T4   = P4/rho4;
-a4   = sqrt(gam*P4/rho4);
-
 rho1 = 0.125;
 u1   = 0;
 P1   = 0.1;
-T1   = P4/rho1;
-a1   = sqrt(gam*P1/rho1);
 
 %------------ Shock-tube calculation ------------
+T4   = P4/rho4;
+a4   = sqrt(gam*P4/rho4);
+T1   = P4/rho1;
+a1   = sqrt(gam*P1/rho1);
 P4P1 = P4/P1;
 func = @(Ms) (P4P1-(2*gam*Ms(1)^2-(gam-1))/(gam+1) ...
     *(1-(gam-1)/(gam+1)*a1/a4*(Ms(1)-1/Ms(1)))^(-2*gam/(gam-1)))^2;
